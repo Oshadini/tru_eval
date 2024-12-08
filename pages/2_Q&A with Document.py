@@ -29,10 +29,10 @@ __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
-os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
-os.environ["LANGCHAIN_PROJECT"] = "LLM Eval with Trulens"
-
+#os.environ["LANGCHAIN_TRACING_V2"] = "true"
+#os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
+#os.environ["LANGCHAIN_PROJECT"] = "LLM Eval with Trulens"
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 template = """Answer the question based only on the following context:
 {context}
 If you don't know the answer, just say out of scope, don't try to make up an answer.
@@ -42,7 +42,7 @@ Question: {question}
 persist_directory = "data_docs"
 prompt=ChatPromptTemplate.from_template(template)
 embeddings = OpenAIEmbeddings()
-model=ChatOpenAI(model_name="gpt-4-turbo-preview",temperature=0)
+model = ChatOpenAI(model="gpt-4o", openai_api_key = openai.api_key, max_tokens=1024)
 output_parser=StrOutputParser()
 def format_docs(docs):
     format_D="\n\n".join([d.page_content for d in docs])
